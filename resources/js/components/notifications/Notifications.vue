@@ -35,6 +35,12 @@ export default{
     methods: {
         markAllAsRead(){
             this.$store.dispatch('markAllAsRead')
+            this.$toast.success({
+                            title: 'Sucesso',
+                            message: 'Todas as notificações foram marcadas como lidas',
+                            showMethod: 'fadeInRight',
+                            hideMethod: 'fadeOutRight'
+                        })
         }
     }
 }

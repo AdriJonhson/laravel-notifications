@@ -33,7 +33,8 @@ export default {
 
 		markAllAsRead(context){
 			axios.put('/notifications-all-read')
-					.then(() => context.commit('MARK_ALL_AS_READ'))
+					.then(
+						() => context.commit('MARK_ALL_AS_READ'))
 		}
 	}
 }

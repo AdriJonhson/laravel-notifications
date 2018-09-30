@@ -22,6 +22,12 @@ export default{
 	methods: {
 		markAsRead(idNotification) {
 			this.$store.dispatch('markAsRead', {id: idNotification})
+			this.$toast.success({
+                title: 'Sucesso',
+                message: 'Notificação marcada como lida',
+                showMethod: 'fadeInRight',
+                hideMethod: 'fadeOutRight'
+            })
 		}
 	}
 }
