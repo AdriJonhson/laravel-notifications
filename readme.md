@@ -1,4 +1,4 @@
-#Notoficações
+#Notificações
 
 php artisan make:notification PostCommented
 

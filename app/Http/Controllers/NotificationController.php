@@ -15,9 +15,26 @@ class NotificationController extends Controller
 
 	public function notifications(Request $request)
 	{
-		$notifications = $request->user()->notifications;
+		$notifications = $request->user()->unreadNotifications;
 
 		return response()->json(compact('notifications'));
 	}
+
+	public function makeAsRead(Request $request)
+	{
+		$notification = $request->user()
+							->notifications()
+							->where('id', $request->id)
+							->first();
+
+		if($notification){
+			$notification->markAsRead();
+		}
+	}
+
+	public function markAllAsRead(Request $request)
+	{
+		$request->user()->unreadNotifications->markAsRead();
+	}	
 
 }

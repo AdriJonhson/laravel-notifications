@@ -48335,6 +48335,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         notifications: function notifications() {
             return this.$store.state.notifications.items;
         }
+    },
+
+    methods: {
+        markAllAsRead: function markAllAsRead() {
+            this.$store.dispatch('markAllAsRead');
+        }
     }
 });
 
@@ -48378,15 +48384,28 @@ var render = function() {
           _vm._l(_vm.notifications, function(notification) {
             return _c("notification", {
               key: notification.id,
-              attrs: { notification: notification.data }
+              attrs: { notification: notification }
             })
           }),
           _vm._v(" "),
-          _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-            _vm._v(
-              "\n                    Limpar Notificações\n                "
-            )
-          ])
+          _c(
+            "a",
+            {
+              staticClass: "dropdown-item",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  _vm.markAllAsRead()
+                }
+              }
+            },
+            [
+              _vm._v(
+                "\n                    Limpar Notificações\n                "
+              )
+            ]
+          )
         ],
         2
       )
@@ -48464,13 +48483,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: ['notification'],
 
 	computed: {
 		comment: function comment() {
-			return this.notification.comment;
+			return this.notification.data.comment;
+		}
+	},
+
+	methods: {
+		markAsRead: function markAsRead(idNotification) {
+			this.$store.dispatch('markAsRead', { id: idNotification });
 		}
 	}
 });
@@ -48485,6 +48513,19 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+      _c(
+        "span",
+        {
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              _vm.markAsRead(_vm.notification.id)
+            }
+          }
+        },
+        [_c("i", { staticClass: "far fa-check-square" })]
+      ),
+      _vm._v(" "),
       _c("strong", [_vm._v(_vm._s(_vm.comment.user.name) + " comentou:")]),
       _vm._v(" " + _vm._s(_vm.comment.title) + "\n    \t")
     ])
@@ -48523,6 +48564,15 @@ if (false) {
 	mutations: {
 		LOAD_NOTIFICATIONS: function LOAD_NOTIFICATIONS(state, notifications) {
 			state.items = notifications;
+		},
+		MARK_AS_READ: function MARK_AS_READ(state, idNotification) {
+			var index = state.items.filter(function (notification) {
+				return notification.id == idNotification;
+			});
+			state.items.splice(index, 1);
+		},
+		MARK_ALL_AS_READ: function MARK_ALL_AS_READ(state) {
+			state.items = [];
 		}
 	},
 
@@ -48530,6 +48580,16 @@ if (false) {
 		loadNotifications: function loadNotifications(context) {
 			axios.get('/notifications').then(function (response) {
 				context.commit('LOAD_NOTIFICATIONS', response.data.notifications);
+			});
+		},
+		markAsRead: function markAsRead(context, params) {
+			axios.put('/notification-read', params).then(function () {
+				return context.commit('MARK_AS_READ');
+			}, params.id);
+		},
+		markAllAsRead: function markAllAsRead(context) {
+			axios.put('/notifications-all-read').then(function () {
+				return context.commit('MARK_ALL_AS_READ');
 			});
 		}
 	}
