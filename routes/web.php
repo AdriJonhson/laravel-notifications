@@ -1,5 +1,7 @@
 <?php
 
+Broadcast::routes();
+
 Route::get('/', function () {
     return view('welcome');
 });

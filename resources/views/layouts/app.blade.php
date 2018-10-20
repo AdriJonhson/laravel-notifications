@@ -20,6 +20,18 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <script>
+        window.Laravel = {!! json_encode([
+                'csrf'      => csrf_token(),
+                'pusher'    => [
+                    'key'       => config('broadcasting.connections.pusher.key'),
+                    'cluster'   => config('broadcasting.connections.pusher.options.cluster'),
+                ],
+                'user'  => auth()->check() ? auth()->user()->id : '',
+            ]) 
+        !!}
+    </script>
 </head>
 <body>
     <div id="app">
